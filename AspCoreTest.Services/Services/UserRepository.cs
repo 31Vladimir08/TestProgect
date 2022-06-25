@@ -2,74 +2,118 @@
 using AspCoreTest.Services.Interfaces;
 using AspCoreTest.Services.Models;
 
+using Microsoft.EntityFrameworkCore;
+
 namespace AspCoreTest.Services.Services
 {
     public class UserRepository : IUserRepository
     {
-        private readonly AppDbContext _appDbContext;
-        public UserRepository(AppDbContext appDbContext)
+        private readonly IDbContextFactory<AppDbContext> _contextFactory;
+        public UserRepository(IDbContextFactory<AppDbContext> contextFactory)
         {
-            _appDbContext = appDbContext;
+            _contextFactory = contextFactory;
         }
 
-        public void AddUser(UserDataModel userDataModel)
+        public void AddUser(UserDataModel UserDataModel)
         {
-            throw new NotImplementedException();
+            using (var context = _contextFactory.CreateDbContext())
+            {
+                context.User.Add(UserDataModel);
+                context.SaveChanges();
+            }
         }
 
-        public Task AddUserAsync(UserDataModel userDataModel)
+        public async Task AddUserAsync(UserDataModel userDataModel)
         {
-            throw new NotImplementedException();
+            using (var context = _contextFactory.CreateDbContext())
+            {
+                context.User.Add(userDataModel);
+                await context.SaveChangesAsync();
+            }
         }
 
-        public UserDataModel GetUserById(int userId)
+        public UserDataModel? GetUserById(int userId)
         {
-            throw new NotImplementedException();
+            using (var context = _contextFactory.CreateDbContext())
+            {
+                return context.User.Where(x => x.Id == userId).AsNoTracking().FirstOrDefault();
+            }
         }
 
-        public Task<UserDataModel> GetUserByIdAsync(int userId)
+        public async Task<UserDataModel?> GetUserByIdAsync(int userId)
         {
-            throw new NotImplementedException();
+            using (var context = _contextFactory.CreateDbContext())
+            {
+                return await context.User.Where(x => x.Id == userId).AsNoTracking().FirstOrDefaultAsync();
+            }                
         }
 
-        public UserDataModel GetUserByName(string username)
+        public UserDataModel? GetUserByName(string username)
         {
-            throw new NotImplementedException();
+            using (var context = _contextFactory.CreateDbContext())
+            {
+                return context.User.Where(x => x.Name == username).AsNoTracking().FirstOrDefault();
+            }                
         }
 
-        public Task<UserDataModel> GetUserByNameAsync(string username)
+        public async Task<UserDataModel?> GetUserByNameAsync(string username)
         {
-            throw new NotImplementedException();
+            using (var context = _contextFactory.CreateDbContext())
+            {
+                return await context.User.Where(x => x.Name == username).AsNoTracking().FirstOrDefaultAsync();
+            }                
         }
 
-        public UserDataModel SearchUserByName(IQueryable<UserDataModel> query)
+        public IEnumerable<UserDataModel?> SearchUserByName(IQueryable<UserDataModel> query)
         {
-            throw new NotImplementedException();
+            return query.ToList();
         }
 
-        public Task<UserDataModel> SearchUserByNameAsync(IQueryable<UserDataModel> query)
+        public async Task<IEnumerable<UserDataModel?>> SearchUserByNameAsync(IQueryable<UserDataModel> query)
         {
-            throw new NotImplementedException();
+            return await query.ToListAsync();
         }
 
         public void UpdateUser(UserDataModel userDataModel)
         {
-            throw new NotImplementedException();
+            using (var context = _contextFactory.CreateDbContext())
+            {
+                context.User.Update(userDataModel);
+                context.SaveChanges();
+            }                
         }
 
-        public Task UpdateUserAsync(UserDataModel userDataModel)
+        public async Task UpdateUserAsync(UserDataModel userDataModel)
         {
-            throw new NotImplementedException();
+            using (var context = _contextFactory.CreateDbContext())
+            {
+                context.User.Update(userDataModel);
+                await context.SaveChangesAsync();
+            }                
         }
 
         public void UpdateUserState(int userId, bool userState)
         {
-            throw new NotImplementedException();
+            using (var context = _contextFactory.CreateDbContext())
+            {
+                var t = context.User.Where(x => x.Id == userId).FirstOrDefault();
+                if (t == null)
+                    return;
+                t.State = userState;
+                context.SaveChanges();
+            }
         }
 
-        public Task UpdateUserStateAsync(int userId, bool userState)
+        public async Task UpdateUserStateAsync(int userId, bool userState)
         {
-            throw new NotImplementedException();
+            using (var context = _contextFactory.CreateDbContext())
+            {
+                var t = context.User.Where(x => x.Id == userId).FirstOrDefault();
+                if (t == null)
+                    return;
+                t.State = userState;
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

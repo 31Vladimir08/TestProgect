@@ -12,7 +12,6 @@ namespace AspCoreTest.Services.Models
         public DateTime DeliveryTime { get; set; }
         public string Content { get; set; }
         public UserDataModel User { get; set; }
-        public UserDataModel UserContact { get; set; }
     }
 
     public class MessageDataModelConfig : IEntityTypeConfiguration<MessageDataModel>
@@ -21,8 +20,8 @@ namespace AspCoreTest.Services.Models
         {
             builder.ToTable("Messages");
             builder.HasOne(p => p.User).WithMany(t => t.Message).HasForeignKey(p => p.UserId);
-            builder.HasOne(p => p.UserContact).WithMany(t => t.Message).HasForeignKey(p => p.ContactId);
             builder.HasKey(u => u.Id);
+            builder.HasIndex(u => u.ContactId);
         }
     }
 }

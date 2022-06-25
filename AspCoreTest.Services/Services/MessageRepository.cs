@@ -2,6 +2,8 @@
 using AspCoreTest.Services.Interfaces;
 using AspCoreTest.Services.Models;
 
+using Microsoft.EntityFrameworkCore;
+
 namespace AspCoreTest.Services.Services
 {
     public class MessageRepository : IMessageRepository
@@ -14,32 +16,34 @@ namespace AspCoreTest.Services.Services
 
         public void AddMessage(MessageDataModel messageDataModel)
         {
-            throw new NotImplementedException();
+            _appDbContext.Set<MessageDataModel>().Add(messageDataModel);
+            _appDbContext.SaveChanges();
         }
 
-        public Task AddMessageAsync(MessageDataModel messageDataModel)
+        public async Task AddMessageAsync(MessageDataModel messageDataModel)
         {
-            throw new NotImplementedException();
+            _appDbContext.Set<MessageDataModel>().Add(messageDataModel);
+            await _appDbContext.SaveChangesAsync();
         }
 
         public IEnumerable<MessageDataModel> GetUserMessages(int userId)
         {
-            throw new NotImplementedException();
+            return _appDbContext.Set<MessageDataModel>().Where(x => x.UserId == userId).AsNoTracking().ToList();
         }
 
-        public Task<IEnumerable<MessageDataModel>> GetUserMessagesAsync(int userId)
+        public async Task<IEnumerable<MessageDataModel>> GetUserMessagesAsync(int userId)
         {
-            throw new NotImplementedException();
+            return await _appDbContext.Set<MessageDataModel>().Where(x => x.UserId == userId).AsNoTracking().ToListAsync();
         }
 
-        public MessageDataModel SearchUserMessages(int userId, int contactId, IQueryable<MessageDataModel> query)
+        public MessageDataModel? SearchUserMessages(int userId, int contactId, IQueryable<MessageDataModel> query)
         {
-            throw new NotImplementedException();
+            return query.Where(x => x.UserId == userId && x.ContactId == contactId).AsNoTracking().FirstOrDefault();
         }
 
-        public Task<MessageDataModel> SearchUserMessagesAsync(int userId, int contactId, IQueryable<MessageDataModel> query)
+        public async Task<MessageDataModel?> SearchUserMessagesAsync(int userId, int contactId, IQueryable<MessageDataModel> query)
         {
-            throw new NotImplementedException();
+            return await query.Where(x => x.UserId == userId && x.ContactId == contactId).AsNoTracking().FirstOrDefaultAsync();
         }
     }
 }

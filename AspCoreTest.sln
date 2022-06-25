@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspCoreTest", "AspCoreTest\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspCoreTest.Services", "AspCoreTest.Services\AspCoreTest.Services.csproj", "{2D6D0E8B-9DB7-440C-983C-4F7A26E8500F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspCoreTest.Services.Tests", "AspCoreTest.Services.Tests\AspCoreTest.Services.Tests.csproj", "{76876061-2BAF-43EB-A2B6-FB1AC2577F55}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{2D6D0E8B-9DB7-440C-983C-4F7A26E8500F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D6D0E8B-9DB7-440C-983C-4F7A26E8500F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D6D0E8B-9DB7-440C-983C-4F7A26E8500F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76876061-2BAF-43EB-A2B6-FB1AC2577F55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76876061-2BAF-43EB-A2B6-FB1AC2577F55}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76876061-2BAF-43EB-A2B6-FB1AC2577F55}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76876061-2BAF-43EB-A2B6-FB1AC2577F55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
