@@ -10,7 +10,6 @@ namespace AspCoreTest.Services.Models
         public int ContactId { get; set; }
         public DateTime? LastUpdateTime { get; set; }
         public UserDataModel User { get; set; }
-        public UserDataModel UserContact { get; set; }
     }
 
     public class ContactDataModelConfig : IEntityTypeConfiguration<ContactDataModel>
@@ -19,8 +18,8 @@ namespace AspCoreTest.Services.Models
         {
             builder.ToTable("Contacts");
             builder.HasOne(p => p.User).WithMany(t => t.Contact).HasForeignKey(p => p.UserId);
-            builder.HasOne(p => p.UserContact).WithMany(t => t.Contact).HasForeignKey(p => p.ContactId);
             builder.HasKey(u => u.Id);
+            builder.HasIndex(u => u.ContactId);
         }
     }
 }
