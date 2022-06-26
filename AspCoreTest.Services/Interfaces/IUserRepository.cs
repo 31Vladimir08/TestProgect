@@ -9,8 +9,8 @@ namespace AspCoreTest.Services.Interfaces
         Task<UserDataModel?> GetUserByIdAsync(int userId);
         UserDataModel? GetUserByName(string username);
         Task<UserDataModel?> GetUserByNameAsync(string username);
-        IEnumerable<UserDataModel?> SearchUserByName(IQueryable<UserDataModel> query);
-        Task<IEnumerable<UserDataModel?>> SearchUserByNameAsync(IQueryable<UserDataModel> query);
+        IEnumerable<UserDataModel> SearchUserByName(IQueryable<UserDataModel> query);
+        Task<IEnumerable<UserDataModel>> SearchUserByNameAsync(IQueryable<UserDataModel> query);
         void AddUser(UserDataModel userDataModel);
         Task AddUserAsync(UserDataModel userDataModel);
         void UpdateUser(UserDataModel userDataModel);

@@ -29,9 +29,14 @@ namespace AspCoreTest.Services.Tests.Tests
             {
                 var expected = db.Message.Where(x => x.UserId == 1).ToList();
 
-                Assert.IsTrue(actual != null 
-                    && !actual.Any(x => x.UserId != 1)
-                    && actual.Count() == expected.Count());
+                var isTrue = () =>
+                {
+                    return actual != null
+                        && !actual.Any(x => x.UserId != 1)
+                        && actual.Count() == expected.Count();
+                };
+
+                Assert.IsTrue(isTrue());
             }
         }
 
@@ -44,16 +49,21 @@ namespace AspCoreTest.Services.Tests.Tests
             {
                 var expected = db.Message.Where(x => x.UserId == 1).ToList();
 
-                Assert.IsTrue(actual != null
-                    && !actual.Any(x => x.UserId != 1)
-                    && actual.Count() == expected.Count());
+                var isTrue = () =>
+                {
+                    return actual != null
+                        && !actual.Any(x => x.UserId != 1)
+                        && actual.Count() == expected.Count();
+                };
+
+                Assert.IsTrue(isTrue());
             }
         }
 
         [TestMethod]
         public void SearchUserMessagesTest()
         {
-            IEnumerable<MessageDataModel?> actual;
+            IEnumerable<MessageDataModel> actual;
             using (var db = _contextFactory.CreateDbContext())
             {
                 var query = db.Message.Where(x => EF.Functions.Like(x.Content, "%was%"));
@@ -64,16 +74,21 @@ namespace AspCoreTest.Services.Tests.Tests
             {
                 var expected = db.Message.Where(x => EF.Functions.Like(x.Content, "%was%") && x.UserId == 1 && x.ContactId == 2).ToList();
 
-                Assert.IsTrue(actual != null
+                var isTrue = () =>
+                {
+                    return actual != null
                     && actual.Count() == expected.Count()
-                    && !actual.Any(x => x.UserId != 1 || x.ContactId != 2));
+                    && !actual.Any(x => x.UserId != 1 || x.ContactId != 2);
+                };
+
+                Assert.IsTrue(isTrue());
             }
         }
 
         [TestMethod]
         public async Task SearchUserMessagesAsyncTest()
         {
-            IEnumerable<MessageDataModel?> actual;
+            IEnumerable<MessageDataModel> actual;
             using (var db = _contextFactory.CreateDbContext())
             {
                 var query = db.Message.Where(x => EF.Functions.Like(x.Content, "%was%"));
@@ -84,9 +99,14 @@ namespace AspCoreTest.Services.Tests.Tests
             {
                 var expected = db.Message.Where(x => EF.Functions.Like(x.Content, "%was%") && x.UserId == 1 && x.ContactId == 2).ToList();
 
-                Assert.IsTrue(actual != null
+                var isTrue = () =>
+                {
+                    return actual != null
                     && actual.Count() == expected.Count()
-                    && !actual.Any(x => x.UserId != 1 || x.ContactId != 2));
+                    && !actual.Any(x => x.UserId != 1 || x.ContactId != 2);
+                };
+
+                Assert.IsTrue(isTrue());
             }
         }
 
@@ -107,10 +127,15 @@ namespace AspCoreTest.Services.Tests.Tests
                 var expected = db.Message.Where(x => x.Content == "TestAddMessage").ToList();
                 var first = expected.First();
 
-                Assert.IsTrue(expected.Count() == 1
-                    && first.Content == "TestAddMessage"
-                    && first.UserId == 8
-                    && first.ContactId == 1);
+                var isTrue = () =>
+                {
+                    return expected.Count() == 1
+                        && first.Content == "TestAddMessage"
+                        && first.UserId == 8
+                        && first.ContactId == 1;
+                };
+
+                Assert.IsTrue(isTrue());
             }
         }
 
@@ -131,10 +156,15 @@ namespace AspCoreTest.Services.Tests.Tests
                 var expected = db.Message.Where(x => x.Content == "TestAddMessageAsync").ToList();
                 var first = expected.First();
 
-                Assert.IsTrue(expected.Count() == 1
+                var isTrue = () =>
+                {
+                    return expected.Count() == 1
                     && first.Content == "TestAddMessageAsync"
                     && first.UserId == 1
-                    && first.ContactId == 8);
+                    && first.ContactId == 8;
+                };
+
+                Assert.IsTrue(isTrue());
             }
         }
 

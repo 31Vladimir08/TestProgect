@@ -2,74 +2,214 @@
 using AspCoreTest.Services.Interfaces;
 using AspCoreTest.Services.Models;
 
+using Microsoft.EntityFrameworkCore;
+
 namespace AspCoreTest.Services.Services
 {
     public class ContactRepository : IContactRepository
     {
-        private readonly AppDbContext _appDbContext;
-        public ContactRepository(AppDbContext appDbContext)
+        private readonly IDbContextFactory<AppDbContext> _contextFactory;
+        public ContactRepository(IDbContextFactory<AppDbContext> contextFactory)
         {
-            _appDbContext = appDbContext;
+            _contextFactory = contextFactory;
         }
 
         public void AddContact(ContactDataModel contactDataModel)
         {
-            throw new NotImplementedException();
+            using (var db = _contextFactory.CreateDbContext())
+            {
+                db.Contact.Add(contactDataModel);
+                db.SaveChanges();
+            }
         }
 
-        public Task AddContactAsync(ContactDataModel contactDataModel)
+        public async Task AddContactAsync(ContactDataModel contactDataModel)
         {
-            throw new NotImplementedException();
+            using (var db = await _contextFactory.CreateDbContextAsync())
+            {
+                db.Contact.Add(contactDataModel);
+                await db.SaveChangesAsync();
+            }
         }
 
-        public UserDataModel DeleteContact(int userId, int contactId)
+        public void DeleteContact(int userId, int contactId)
         {
-            throw new NotImplementedException();
+            using (var db = _contextFactory.CreateDbContext())
+            {
+                var t = db.Contact.AsNoTracking().FirstOrDefault(x => x.UserId == userId && x.ContactId == contactId);
+                if (t == null)
+                    return;
+                db.Contact.Remove(t);
+                db.SaveChanges();
+            }
         }
 
-        public Task DeleteContactAsync(int userId, int contactId)
+        public async Task DeleteContactAsync(int userId, int contactId)
         {
-            throw new NotImplementedException();
+            using (var db = await _contextFactory.CreateDbContextAsync())
+            {
+                var t = db.Contact.AsNoTracking().FirstOrDefault(x => x.UserId == userId && x.ContactId == contactId);
+                if (t == null)
+                    return;
+                db.Contact.Remove(t);
+                await db.SaveChangesAsync();
+            }
         }
 
-        public UserDataModel GetUserContact(int userId, int contactId)
+        public ContactDataModel? GetUserContact(int userId, int contactId)
         {
-            throw new NotImplementedException();
+            using (var db = _contextFactory.CreateDbContext())
+            {
+                return db.Contact.Where(x => x.UserId == userId && x.ContactId == contactId)
+                    .Join(
+                        db.User,
+                        contact => contact.UserId,
+                        user => user.Id,
+                        (contact, user) => new ContactDataModel()
+                        {
+                            Id = contact.Id,
+                            UserId = contact.UserId,
+                            ContactId = contact.ContactId,
+                            LastUpdateTime = contact.LastUpdateTime,
+                            User = new UserDataModel()
+                            {
+                                Id = user.Id,
+                                Name = user.Name,
+                                State = user.State
+                            }
+                        }
+                    ).AsNoTracking().FirstOrDefault();
+            }
         }
 
-        public Task<UserDataModel> GetUserContactAsync(int userId, int contactId)
+        public async Task<ContactDataModel?> GetUserContactAsync(int userId, int contactId)
         {
-            throw new NotImplementedException();
+            using (var db = await _contextFactory.CreateDbContextAsync())
+            {
+                return await db.Contact.Where(x => x.UserId == userId && x.ContactId == contactId)
+                    .Join(
+                        db.User,
+                        contact => contact.UserId,
+                        user => user.Id,
+                        (contact, user) => new ContactDataModel()
+                        {
+                            Id = contact.Id,
+                            UserId = contact.UserId,
+                            ContactId = contact.ContactId,
+                            LastUpdateTime = contact.LastUpdateTime,
+                            User = new UserDataModel()
+                            {
+                                Id = user.Id,
+                                Name = user.Name,
+                                State = user.State
+                            }
+                        }
+                    ).AsNoTracking().FirstOrDefaultAsync();
+            }
         }
 
         public IEnumerable<ContactDataModel> GetUserContacts(int userId)
         {
-            throw new NotImplementedException();
+            using (var db = _contextFactory.CreateDbContext())
+            {
+                return db.Contact.Where(x => x.UserId == userId)
+                    .Join(
+                        db.User,
+                        contact => contact.UserId,
+                        user => user.Id,
+                        (contact, user) => new ContactDataModel()
+                        {
+                            Id = contact.Id,
+                            UserId = contact.UserId,
+                            ContactId = contact.Id,
+                            LastUpdateTime = contact.LastUpdateTime,
+                            User = new UserDataModel()
+                            {
+                                Id = user.Id,
+                                Name = user.Name,
+                                State = user.State
+                            }
+                        }
+                    ).AsNoTracking().ToList();
+            }
         }
 
-        public Task<IEnumerable<ContactDataModel>> GetUserContactsAsync(int userId)
+        public async Task<IEnumerable<ContactDataModel>> GetUserContactsAsync(int userId)
         {
-            throw new NotImplementedException();
+            using (var db = await _contextFactory.CreateDbContextAsync())
+            {
+                return await db.Contact.Where(x => x.UserId == userId)
+                    .Join(
+                        db.User,
+                        contact => contact.UserId,
+                        user => user.Id,
+                        (contact, user) => new ContactDataModel()
+                        {
+                            Id = contact.Id,
+                            UserId = contact.UserId,
+                            ContactId = contact.Id,
+                            LastUpdateTime = contact.LastUpdateTime,
+                            User = new UserDataModel()
+                            {
+                                Id = user.Id,
+                                Name = user.Name,
+                                State = user.State
+                            }
+                        }
+                    ).AsNoTracking().ToListAsync();
+            }
         }
 
-        public ContactDataModel SearchUserContacts(int userId, IQueryable<ContactDataModel> query)
+        public ContactDataModel? SearchUserContacts(int userId, IQueryable<ContactDataModel> query)
         {
-            throw new NotImplementedException();
+            return query.Select(x => new ContactDataModel() 
+                {
+                    Id = x.Id,
+                    UserId = x.UserId,
+                    ContactId = x.ContactId,
+                    LastUpdateTime = x.LastUpdateTime,
+                    User = new UserDataModel()
+                    {
+                        Id = x.User.Id,
+                        Name = x.User.Name,
+                        State = x.User.State
+                    }
+                }).FirstOrDefault(x => x.UserId == userId);
         }
 
-        public Task<ContactDataModel> SearchUserContactsAsync(int userId, IQueryable<ContactDataModel> query)
+        public async Task<ContactDataModel?> SearchUserContactsAsync(int userId, IQueryable<ContactDataModel> query)
         {
-            throw new NotImplementedException();
+            return await query.Select(x => new ContactDataModel()
+            {
+                Id = x.Id,
+                UserId = x.UserId,
+                ContactId = x.ContactId,
+                LastUpdateTime = x.LastUpdateTime,
+                User = new UserDataModel()
+                {
+                    Id = x.User.Id,
+                    Name = x.User.Name,
+                    State = x.User.State
+                }
+            }).FirstOrDefaultAsync(x => x.UserId == userId);
         }
 
         public void UpdateContact(ContactDataModel contactDataModel)
         {
-            throw new NotImplementedException();
+            using (var db = _contextFactory.CreateDbContext())
+            {
+                db.Contact.Update(contactDataModel);
+                db.SaveChanges();
+            }
         }
 
-        public Task UpdateContactAsync(ContactDataModel contactDataModel)
+        public async Task UpdateContactAsync(ContactDataModel contactDataModel)
         {
-            throw new NotImplementedException();
+            using (var db = await _contextFactory.CreateDbContextAsync())
+            {
+                db.Contact.Update(contactDataModel);
+                await db.SaveChangesAsync();
+            }
         }
     }
 }

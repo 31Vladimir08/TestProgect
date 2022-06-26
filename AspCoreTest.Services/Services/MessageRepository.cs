@@ -25,7 +25,7 @@ namespace AspCoreTest.Services.Services
 
         public async Task AddMessageAsync(MessageDataModel messageDataModel)
         {
-            using (var context = _contextFactory.CreateDbContext())
+            using (var context = await _contextFactory.CreateDbContextAsync())
             {
                 context.Message.Add(messageDataModel);
                 await context.SaveChangesAsync();
@@ -42,18 +42,18 @@ namespace AspCoreTest.Services.Services
 
         public async Task<IEnumerable<MessageDataModel>> GetUserMessagesAsync(int userId)
         {
-            using (var context = _contextFactory.CreateDbContext())
+            using (var context = await _contextFactory.CreateDbContextAsync())
             {
                 return await context.Message.Where(x => x.UserId == userId).AsNoTracking().ToListAsync();
             }
         }
 
-        public IEnumerable<MessageDataModel?> SearchUserMessages(int userId, int contactId, IQueryable<MessageDataModel> query)
+        public IEnumerable<MessageDataModel> SearchUserMessages(int userId, int contactId, IQueryable<MessageDataModel> query)
         {
             return query.Where(x => x.UserId == userId && x.ContactId == contactId).AsNoTracking().ToList();
         }
 
-        public async Task<IEnumerable<MessageDataModel?>> SearchUserMessagesAsync(int userId, int contactId, IQueryable<MessageDataModel> query)
+        public async Task<IEnumerable<MessageDataModel>> SearchUserMessagesAsync(int userId, int contactId, IQueryable<MessageDataModel> query)
         {
             return await query.Where(x => x.UserId == userId && x.ContactId == contactId).AsNoTracking().ToListAsync();
         }

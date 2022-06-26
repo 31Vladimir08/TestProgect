@@ -25,7 +25,7 @@ namespace AspCoreTest.Services.Services
 
         public async Task AddUserAsync(UserDataModel userDataModel)
         {
-            using (var context = _contextFactory.CreateDbContext())
+            using (var context = await _contextFactory.CreateDbContextAsync())
             {
                 context.User.Add(userDataModel);
                 await context.SaveChangesAsync();
@@ -42,7 +42,7 @@ namespace AspCoreTest.Services.Services
 
         public async Task<UserDataModel?> GetUserByIdAsync(int userId)
         {
-            using (var context = _contextFactory.CreateDbContext())
+            using (var context = await _contextFactory.CreateDbContextAsync())
             {
                 return await context.User.Where(x => x.Id == userId).AsNoTracking().FirstOrDefaultAsync();
             }                
@@ -58,18 +58,18 @@ namespace AspCoreTest.Services.Services
 
         public async Task<UserDataModel?> GetUserByNameAsync(string username)
         {
-            using (var context = _contextFactory.CreateDbContext())
+            using (var context = await _contextFactory.CreateDbContextAsync())
             {
                 return await context.User.Where(x => x.Name == username).AsNoTracking().FirstOrDefaultAsync();
             }                
         }
 
-        public IEnumerable<UserDataModel?> SearchUserByName(IQueryable<UserDataModel> query)
+        public IEnumerable<UserDataModel> SearchUserByName(IQueryable<UserDataModel> query)
         {
             return query.ToList();
         }
 
-        public async Task<IEnumerable<UserDataModel?>> SearchUserByNameAsync(IQueryable<UserDataModel> query)
+        public async Task<IEnumerable<UserDataModel>> SearchUserByNameAsync(IQueryable<UserDataModel> query)
         {
             return await query.ToListAsync();
         }
@@ -85,7 +85,7 @@ namespace AspCoreTest.Services.Services
 
         public async Task UpdateUserAsync(UserDataModel userDataModel)
         {
-            using (var context = _contextFactory.CreateDbContext())
+            using (var context = await _contextFactory.CreateDbContextAsync())
             {
                 context.User.Update(userDataModel);
                 await context.SaveChangesAsync();
@@ -106,7 +106,7 @@ namespace AspCoreTest.Services.Services
 
         public async Task UpdateUserStateAsync(int userId, bool userState)
         {
-            using (var context = _contextFactory.CreateDbContext())
+            using (var context = await _contextFactory.CreateDbContextAsync())
             {
                 var t = context.User.Where(x => x.Id == userId).FirstOrDefault();
                 if (t == null)

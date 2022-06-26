@@ -55,9 +55,14 @@ namespace AspCoreTest.Services.Tests.Tests
             using (var db = _contextFactory.CreateDbContext())
             {
                 var expected = db.User.First(x => x.Id == 3);
-                Assert.IsTrue(
-                    actual != null
-                    && actual.Id == expected.Id);
+
+                var isTrue = () =>
+                {
+                    return actual != null
+                        && actual.Id == expected.Id;
+                };
+
+                Assert.IsTrue(isTrue());
             }
         }
 
@@ -69,9 +74,14 @@ namespace AspCoreTest.Services.Tests.Tests
             using (var db = _contextFactory.CreateDbContext())
             {
                 var expected = db.User.First(x => x.Id == 3);
-                Assert.IsTrue(
-                    actual != null
-                    && actual.Id == expected.Id);
+
+                var isTrue = () =>
+                {
+                    return actual != null
+                        && actual.Id == expected.Id;
+                };
+
+                Assert.IsTrue(isTrue());
             }
         }
 
@@ -83,10 +93,15 @@ namespace AspCoreTest.Services.Tests.Tests
             using (var db = _contextFactory.CreateDbContext())
             {
                 var expected = db.User.First(x => x.Name == "UserTest4");
-                Assert.IsTrue(
-                    actual != null
-                    && actual.Id == expected.Id
-                    && actual.Name == expected.Name);
+
+                var isTrue = () =>
+                {
+                    return actual != null
+                        && actual.Id == expected.Id
+                        && actual.Name == expected.Name;
+                };
+
+                Assert.IsTrue(isTrue());
             }
         }
 
@@ -98,10 +113,15 @@ namespace AspCoreTest.Services.Tests.Tests
             using (var db = _contextFactory.CreateDbContext())
             {
                 var expected = db.User.First(x => x.Name == "UserTest4");
-                Assert.IsTrue(
-                    actual != null
-                    && actual.Id == expected.Id
-                    && actual.Name == expected.Name);
+
+                var isTrue = () =>
+                {
+                    return actual != null
+                        && actual.Id == expected.Id
+                        && actual.Name == expected.Name;
+                };
+
+                Assert.IsTrue(isTrue());
             }
         }
 
@@ -120,7 +140,12 @@ namespace AspCoreTest.Services.Tests.Tests
             {
                 var actual = db.User.FirstOrDefault(x => x.Id == 1);
 
-                Assert.IsTrue(actual != null && actual.Passport == "00000");
+                var isTrue = () =>
+                {
+                    return actual != null && actual.Passport == "00000";
+                };
+
+                Assert.IsTrue(isTrue());
             }
         }
 
@@ -138,7 +163,13 @@ namespace AspCoreTest.Services.Tests.Tests
             using (var db = _contextFactory.CreateDbContext())
             {
                 var actual = db.User.FirstOrDefault(x => x.Id == 2);
-                Assert.IsTrue(actual != null && actual.Passport == "11111");
+
+                var isTrue = () =>
+                {
+                    return actual != null && actual.Passport == "11111";
+                };
+
+                Assert.IsTrue(isTrue());
             }
         }
 
@@ -151,7 +182,12 @@ namespace AspCoreTest.Services.Tests.Tests
             {
                 var actual = db.User.FirstOrDefault(x => x.Id == 1);
 
-                Assert.IsTrue(actual != null && actual.State == false);
+                var isTrue = () =>
+                {
+                    return actual != null && actual.State == false;
+                };
+
+                Assert.IsTrue(isTrue());
             }
         }
 
@@ -164,14 +200,19 @@ namespace AspCoreTest.Services.Tests.Tests
             {
                 var actual = db.User.FirstOrDefault(x => x.Id == 2);
 
-                Assert.IsTrue(actual != null && actual.State == false);
+                var isTrue = () =>
+                {
+                    return actual != null && actual.State == false;
+                };
+
+                Assert.IsTrue(isTrue());
             }
         }
 
         [TestMethod]
         public void SearchUserByNameTest()
         {
-            IEnumerable<UserDataModel?> actual;
+            IEnumerable<UserDataModel> actual;
             using (var db = _contextFactory.CreateDbContext())
             {
                 var query = db.User.Where(x => x.Name == "TEST");
@@ -181,14 +222,20 @@ namespace AspCoreTest.Services.Tests.Tests
             using (var db = _contextFactory.CreateDbContext())
             {
                 var expected = db.User.Where(x => x.Name == "TEST").ToList();
-                Assert.IsTrue(actual != null && actual.Count() == expected.Count());
+
+                var isTrue = () =>
+                {
+                    return actual != null && actual.Count() == expected.Count();
+                };
+
+                Assert.IsTrue(isTrue());
             }
         }
 
         [TestMethod]
         public async Task SearchUserByNameAsyncTest()
         {
-            IEnumerable<UserDataModel?> actual;
+            IEnumerable<UserDataModel> actual;
             using (var db = _contextFactory.CreateDbContext())
             {
                 var query = db.User.Where(x => x.Name == "TEST");
@@ -198,7 +245,11 @@ namespace AspCoreTest.Services.Tests.Tests
             using (var db = _contextFactory.CreateDbContext())
             {
                 var expected = db.User.Where(x => x.Name == "TEST").ToList();
-                Assert.IsTrue(actual != null && actual.Count() == expected.Count());
+                var isTrue = () =>
+                {
+                    return actual != null && actual.Count() == expected.Count();
+                };
+                Assert.IsTrue(isTrue());
             }
         }
 
