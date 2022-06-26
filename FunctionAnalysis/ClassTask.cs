@@ -5,7 +5,7 @@ namespace FunctionAnalysis
     public class ClassTask
     {
         /*
-         * Если файл не существует, упадет в ошибку.
+         * Если файл не существует, упадет в ошибку (возможно проверка реализована в мете вызова этой функции).
          * Если <book 
 		        id="bk101" 
 		        name="Test1">
@@ -52,11 +52,18 @@ namespace FunctionAnalysis
         }
 
         public static string? MyFunc(string input, string elementName, string attrName)
-{
-            var root = XElement.Load(input);
+        {
+            try
+            {
+                var root = XElement.Load(input);
 
-            var result = root.Elements(elementName).FirstOrDefault()?.Attribute(attrName)?.Value;
-            return result;
+                var result = root.Elements(elementName).FirstOrDefault()?.Attribute(attrName)?.Value;
+                return result;
+            }
+            catch (FileNotFoundException e)
+            {
+                return null;
+            }            
         }
     }
 }

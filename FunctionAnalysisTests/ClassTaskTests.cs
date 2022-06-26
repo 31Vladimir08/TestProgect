@@ -14,11 +14,16 @@ namespace FunctionAnalysisTests
             _path = path.Remove(t, path.Length - t) + "FunctionAnalysisTests\\Resources\\TestXml.xml";
         }
 
-        [TestCase("book", "id", ExpectedResult = "bk101")]
-        [TestCase("book", "name", ExpectedResult = "Test1")]
-        public string? MyFuncTest(string elementName, string attrName)
+        [TestCase(null, "book", "sddsds", ExpectedResult = null)]
+        [TestCase(null, "dsdsds", "id", ExpectedResult = null)]
+        [TestCase("weew", "book", "id", ExpectedResult = null)]
+        [TestCase(null, "book", "id", ExpectedResult = "bk101")]
+        [TestCase(null, "book", "name", ExpectedResult = "Test1")]
+        public string? MyFuncTest(string path, string elementName, string attrName)
         {
-            var actual = ClassTask.MyFunc(_path, elementName, attrName);
+            if (string.IsNullOrEmpty(path))
+                path = _path;
+            var actual = ClassTask.MyFunc(path, elementName, attrName);
             return actual;
         }
     }
